@@ -15,7 +15,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -137,24 +137,35 @@
             <div class="row gy-4">
 
               <div class="col-md-6">
-                <label for="name-field" class="pb-2">Votre nom</label>
-                <input type="text" name="name" id="name-field" class="form-control" required="">
+                <label for="name-field">Votre nom</label>
+                <div class="field-wrap">
+                  <i class="bi bi-person field-icon"></i>
+                  <input type="text" name="name" id="name-field" class="form-control" placeholder="Ex : Awa Koné" required="">
+                </div>
               </div>
 
               <div class="col-md-6">
-                <label for="email-field" class="pb-2">Votre email</label>
-                <input type="email" class="form-control" name="email" id="email-field" required="">
+                <label for="email-field">Votre email</label>
+                <div class="field-wrap">
+                  <i class="bi bi-envelope field-icon"></i>
+                  <input type="email" class="form-control" name="email" id="email-field" placeholder="vous@exemple.com" required="">
+                </div>
               </div>
 
               <div class="col-md-12">
-                <label for="message-field" class="pb-2">Message</label>
-                <textarea class="form-control" name="message" rows="10" id="message-field" required=""></textarea>
+                <label for="message-field">Message</label>
+                <div class="field-wrap field-wrap--area">
+                  <i class="bi bi-chat-left-text field-icon"></i>
+                  <textarea class="form-control" name="message" rows="8" id="message-field" placeholder="Parlez-moi de votre projet…" required=""></textarea>
+                </div>
               </div>
 
               <div class="col-md-12 text-center">
-            
-
-                <button type="submit" class="btn btn-primary btn-lg">Envoyer</button>
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="bi bi-send-fill"></i>
+                  <span>Envoyer le message</span>
+                </button>
+                <p class="form-reassure"><i class="bi bi-shield-check"></i> Réponse rapide — vos infos restent confidentielles.</p>
               </div>
 
             </div>

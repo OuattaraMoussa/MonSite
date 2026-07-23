@@ -15,32 +15,34 @@
   <!-- Fonts (mêmes familles que le site) -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&family=Roboto:wght@300;400;500&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     /* ===== Tokens repris de assets/css/main.css ===== */
     :root {
-      --bg: #faf9f5;
-      --text: #3d3929;
-      --heading: #141413;
-      --accent: #c96442;
+      --bg: #f6f8fb;
+      --text: #3c4658;
+      --heading: #101b2c;
+      --accent: #1e5fad;
+      --glow: #f2a91e;
       --surface: #ffffff;
       --contrast: #ffffff;
       --muted: color-mix(in srgb, var(--text), transparent 42%);
       --hairline: color-mix(in srgb, var(--heading), transparent 90%);
-      --heading-font: "Raleway", sans-serif;
-      --body-font: "Roboto", system-ui, sans-serif;
-      --nav-font: "Poppins", sans-serif;
+      --heading-font: "Archivo", "Space Grotesk", sans-serif;
+      --body-font: "Space Grotesk", system-ui, sans-serif;
+      --nav-font: "Space Grotesk", sans-serif;
       --redirect: 6s;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #262624;
-        --text: #c3c0b6;
-        --heading: #faf9f5;
-        --accent: #d97757;
-        --surface: #30302e;
+        --bg: #0d1420;
+        --text: #aeb9cb;
+        --heading: #f2f6fc;
+        --accent: #6fa5e8;
+        --glow: #f5b942;
+        --surface: #16202f;
         --hairline: color-mix(in srgb, #ffffff, transparent 90%);
       }
     }
@@ -139,7 +141,8 @@
                   color-mix(in srgb, var(--accent), #ffffff 12%),
                   var(--accent));
       box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.35),
-                  0 12px 24px -8px color-mix(in srgb, var(--accent), transparent 45%);
+                  0 12px 24px -8px color-mix(in srgb, var(--accent), transparent 45%),
+                  0 0 32px -6px color-mix(in srgb, var(--glow), transparent 55%);
       transform: scale(0);
       animation: pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s forwards;
     }
