@@ -2610,8 +2610,14 @@ body.scrolled .header {
 }
 
 .contact form textarea.form-control {
-  min-height: 150px;
+  min-height: 172px;
+  line-height: 1.6;
   resize: vertical;
+  cursor: text;
+}
+/* The icon marks the first line; wrapped lines return to a comfortable indent */
+.contact form .field-wrap--area .form-control {
+  padding-top: 14px;
 }
 
 .contact form .field-wrap--area .field-icon {
@@ -2669,9 +2675,15 @@ body.scrolled .header {
 .contact form button[type=submit]:hover i {
   transform: translateX(3px) rotate(-12deg);
 }
+/* Instant tactile response: the press wins over hover and lands in ~60ms */
 .contact form button[type=submit]:active {
-  transform: scale(0.97);
-  transition-duration: 0.08s;
+  transform: scale(0.95);
+  box-shadow: 0 6px 16px rgba(30, 95, 173, 0.4);
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+.contact form button[type=submit]:active i {
+  transform: scale(0.9);
+  transition: transform 0.06s ease;
 }
 
 .contact form button[type=submit]::after {
@@ -2771,10 +2783,55 @@ a[aria-label="Chat WhatsApp"]:hover {
 
 /* ---------- Mobile navigation menu redesign (custom) ---------- */
 @media (max-width: 1199px) {
-  /* Full-screen elegant dark overlay (blur is on the overlay itself = safe) */
+  /* Full-screen overlay with a living "aurora" backdrop (blur on the overlay = safe) */
   .mobile-nav-active .navmenu {
-    background: linear-gradient(160deg, rgba(12, 32, 60, 0.97), rgba(6, 15, 28, 0.98)) !important;
+    background: linear-gradient(160deg, #0c2440 0%, #081426 55%, #060f1c 100%) !important;
     backdrop-filter: blur(8px);
+    overflow: hidden;
+  }
+  /* Slowly drifting cobalt + amber light blobs */
+  .mobile-nav-active .navmenu::before {
+    content: "";
+    position: absolute;
+    inset: -25%;
+    z-index: 0;
+    background:
+      radial-gradient(42% 42% at 22% 26%, color-mix(in srgb, #2c7be0, transparent 52%), transparent 70%),
+      radial-gradient(36% 36% at 82% 76%, color-mix(in srgb, var(--glow-color), transparent 66%), transparent 70%),
+      radial-gradient(46% 46% at 70% 12%, color-mix(in srgb, #1e5fad, transparent 55%), transparent 72%);
+    filter: blur(34px);
+    animation: navAurora 16s ease-in-out infinite;
+    pointer-events: none;
+  }
+  /* Faint blueprint grid that pans, masked to fade at the edges */
+  .mobile-nav-active .navmenu::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 34px 34px;
+    -webkit-mask-image: radial-gradient(120% 92% at 50% 40%, #000 52%, transparent 92%);
+            mask-image: radial-gradient(120% 92% at 50% 40%, #000 52%, transparent 92%);
+    animation: navGridPan 12s linear infinite;
+    pointer-events: none;
+  }
+  /* Keep the links above the animated backdrop */
+  .mobile-nav-active .navmenu > ul { z-index: 1; }
+
+  @keyframes navAurora {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(5%, -4%) scale(1.14); }
+    66%  { transform: translate(-4%, 5%) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  @keyframes navGridPan { to { background-position: 34px 34px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-nav-active .navmenu::before,
+    .mobile-nav-active .navmenu::after { animation: none; }
   }
 
   /* Centered list, no more big white box */
@@ -3782,11 +3839,12 @@ p,
   right: 22px;
   bottom: 22px;
   z-index: 9998;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 14px;
+  width: 60px;   /* the widget's hit area is just the launcher; the panel floats above */
+  height: 60px;
 }
+
+/* While the mobile menu is open, the launcher must not sit over the links */
+.mobile-nav-active .wa-widget { display: none; }
 
 /* Floating launcher */
 .wa-fab {
@@ -3830,9 +3888,14 @@ p,
 }
 .wa-widget.is-open .wa-fab-badge { display: none; }
 
-/* Chat panel */
+/* Chat panel — floats above the launcher (absolute), so it never inflates
+   the widget's clickable box when closed (that box would otherwise swallow
+   clicks on the form and, on mobile, on the open nav menu). */
 .wa-panel {
-  width: min(88vw, 330px);
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 14px);
+  width: min(86vw, 330px);
   border-radius: 16px;
   overflow: hidden;
   background: #ece5dd;
@@ -3841,12 +3904,14 @@ p,
   transform: translateY(16px) scale(0.9);
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s ease, visibility 0.3s ease;
 }
 .wa-widget.is-open .wa-panel {
   transform: translateY(0) scale(1);
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 /* Header */
