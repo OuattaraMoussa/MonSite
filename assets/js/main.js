@@ -296,6 +296,48 @@
     }
   }, { passive: true });
 
+  /* ---- Cursor-reactive hero glow + avatar tilt (fine pointers only) ----
+     The pointer becomes a light source (the bulb motif again) and the
+     portrait tilts gently toward it. The tilt targets .hero-avatar-tilt,
+     never .hero-avatar itself — that inner element's transform is already
+     owned by the avatarFloat keyframe. */
+  var heroSection = document.querySelector(".hero");
+  var avatarTilt = document.querySelector(".hero-avatar-tilt");
+  var pointerFine = window.matchMedia("(pointer: fine)").matches;
+
+  if (heroSection && pointerFine && !reduceMotion) {
+    var glow = document.createElement("div");
+    glow.className = "hero-cursor-glow";
+    heroSection.appendChild(glow);
+
+    var glowRaf = false;
+    var gx = 0, gy = 0;
+
+    heroSection.addEventListener("pointermove", function (e) {
+      var rect = heroSection.getBoundingClientRect();
+      gx = e.clientX - rect.left;
+      gy = e.clientY - rect.top;
+      if (glowRaf) return;
+      glowRaf = true;
+      window.requestAnimationFrame(function () {
+        glow.style.opacity = "1";
+        glow.style.transform = "translate(" + gx + "px, " + gy + "px)";
+        if (avatarTilt) {
+          var dx = (gx - rect.width / 2) / (rect.width / 2);
+          var dy = (gy - rect.height / 2) / (rect.height / 2);
+          avatarTilt.style.transform =
+            "rotateY(" + (dx * 7).toFixed(2) + "deg) rotateX(" + (-dy * 7).toFixed(2) + "deg)";
+        }
+        glowRaf = false;
+      });
+    });
+
+    heroSection.addEventListener("pointerleave", function () {
+      glow.style.opacity = "0";
+      if (avatarTilt) avatarTilt.style.transform = "";
+    });
+  }
+
   /* ---- Staggered reveal on scroll (IntersectionObserver) ---- */
   // NOTE: .portfolio-item is intentionally excluded (Isotope controls its transform)
   var revealSelector = [
@@ -489,4 +531,34 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && widget.classList.contains("is-open")) close();
   });
+})();
+
+
+/**
+ * Drifting tech/AI badges behind the mobile nav (site-wide, built once here
+ * so every page shares the same decorative field instead of repeating markup
+ * across 7 HTML files).
+ */
+(function () {
+  "use strict";
+  var nav = document.getElementById("navmenu");
+  if (!nav) return;
+
+  var LOGOS = ["html5", "css3", "javascript", "php", "wordpress", "bootstrap", "claude", "gemini", "grok"];
+  var field = document.createElement("div");
+  field.className = "nav-tech-field";
+  field.setAttribute("aria-hidden", "true");
+
+  LOGOS.forEach(function (name, i) {
+    var span = document.createElement("span");
+    span.className = "nav-tech-ball ntb" + (i + 1) + (name === "grok" ? " ntb-dark" : "");
+    var img = document.createElement("img");
+    img.src = "assets/img/logos/" + name + ".svg";
+    img.alt = "";
+    img.loading = "lazy";
+    span.appendChild(img);
+    field.appendChild(span);
+  });
+
+  nav.insertBefore(field, nav.firstChild);
 })();

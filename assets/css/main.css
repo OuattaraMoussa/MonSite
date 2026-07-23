@@ -2388,15 +2388,28 @@ body.scrolled .header {
   z-index: 1;
 }
 
-/* A faint amber glow bleeds in from a corner — the bulb behind the ink */
+/* Living light: amber + cobalt glows drifting slowly behind the ink —
+   the same "aurora" language as the mobile nav, now on every parallax band */
 .parallax-band::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -20%;
   z-index: 1;
-  background: radial-gradient(60% 80% at 85% 15%,
-    color-mix(in srgb, var(--glow-color), transparent 82%), transparent 60%);
+  background:
+    radial-gradient(38% 46% at 82% 18%, color-mix(in srgb, var(--glow-color), transparent 80%), transparent 62%),
+    radial-gradient(42% 50% at 12% 82%, color-mix(in srgb, #2c7be0, transparent 78%), transparent 64%);
+  animation: bandAurora 18s ease-in-out infinite;
   pointer-events: none;
+}
+
+@keyframes bandAurora {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-3%, 3%) scale(1.12); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax-band::after { animation: none; }
 }
 
 .parallax-band .container {
@@ -2477,6 +2490,44 @@ body.scrolled .header {
   }
 }
 
+/* ---------- Hero avatar tilt wrapper (desktop cursor parallax) ----------
+   JS sets the tilt transform on THIS wrapper, never on .hero-avatar itself —
+   that inner element already owns its transform via the avatarFloat keyframe,
+   and the two would fight over the same CSS property if combined. */
+.hero-avatar-tilt {
+  perspective: 700px;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-avatar-tilt { transition: none; }
+}
+
+/* ---------- Hero cursor glow — the pointer becomes a light source ---------- */
+.hero-cursor-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 420px;
+  margin: -210px 0 0 -210px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--glow-color), transparent 78%) 0%, transparent 68%);
+  /* Above the dark vignette (z-index:3) so it actually reads as light,
+     not just a faint tint smothered underneath it; screen blend keeps
+     it additive so text and buttons stay legible where it passes over them. */
+  z-index: 4;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  will-change: transform;
+}
+
+@media (max-width: 991px), (pointer: coarse) {
+  .hero-cursor-glow { display: none; }
+}
+
 /* ---------- Hero avatar (portrait photo) ---------- */
 .hero .hero-avatar {
   width: 180px;
@@ -2522,10 +2573,46 @@ body.scrolled .header {
 }
 
 /* ---------- Contact page polish (custom) ---------- */
+
+/* Ambient aurora behind the whole section — soft cobalt + amber light
+   washes drifting on the pale background, tuned much fainter than the
+   dark-mode version so it reads as atmosphere, not a color splash. */
+.contact.section {
+  position: relative;
+}
+.contact.section::before {
+  content: "";
+  position: absolute;
+  inset: -15%;
+  z-index: 0;
+  background:
+    radial-gradient(36% 40% at 12% 8%, color-mix(in srgb, var(--accent-color), transparent 92%), transparent 70%),
+    radial-gradient(32% 36% at 90% 88%, color-mix(in srgb, var(--glow-color), transparent 93%), transparent 70%);
+  animation: bandAurora 24s ease-in-out infinite;
+  pointer-events: none;
+}
+.contact.section > .container {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact.section::before { animation: none; }
+}
+
+/* The whole info card breathes gently — alive without touching any
+   hover-driven transform on its child .info-item rows */
 .contact .info-wrap {
   border-radius: 18px;
   border: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+  animation: infoWrapBreathe 7s ease-in-out infinite;
+}
+@keyframes infoWrapBreathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact .info-wrap { animation: none; }
 }
 
 .contact .info-item {
@@ -2559,7 +2646,8 @@ body.scrolled .header {
   margin-top: 6px;
 }
 
-/* Form card */
+/* Form card — glows softly the moment any field inside gets focus,
+   reinforcing that the conversation has started */
 .contact form {
   background-color: var(--surface-color);
   height: 100%;
@@ -2567,6 +2655,12 @@ body.scrolled .header {
   border-radius: 18px;
   border: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.5s ease, border-color 0.5s ease;
+}
+.contact form:focus-within {
+  border-color: color-mix(in srgb, var(--accent-color), transparent 65%);
+  box-shadow: 0 20px 55px rgba(10, 18, 32, 0.12),
+              0 0 0 5px color-mix(in srgb, var(--accent-color), transparent 90%);
 }
 
 @media (max-width: 575px) {
@@ -2781,6 +2875,11 @@ a[aria-label="Chat WhatsApp"]:hover {
   transform: scale(1.1);
 }
 
+/* Hidden by default at every width; only shown for the open mobile overlay
+   (inside the max-width:1199px block below) — defense in depth so the
+   injected field can never affect the desktop dropdown nav. */
+.nav-tech-field { display: none; }
+
 /* ---------- Mobile navigation menu redesign (custom) ---------- */
 @media (max-width: 1199px) {
   /* Full-screen overlay with a living "aurora" backdrop (blur on the overlay = safe) */
@@ -2832,6 +2931,51 @@ a[aria-label="Chat WhatsApp"]:hover {
   @media (prefers-reduced-motion: reduce) {
     .mobile-nav-active .navmenu::before,
     .mobile-nav-active .navmenu::after { animation: none; }
+  }
+
+  /* Drifting tech / AI badges — a third, deeper layer behind the links,
+     naming the stack this developer actually works in. Reuses the same
+     glass-chip look and float keyframes as the homepage's #intro field. */
+  .mobile-nav-active .nav-tech-field {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .nav-tech-ball {
+    position: absolute;
+    width: clamp(30px, 7vw, 42px);
+    height: clamp(30px, 7vw, 42px);
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    opacity: 0.55;
+    will-change: transform;
+  }
+  .nav-tech-ball img { width: 58%; height: 58%; object-fit: contain; }
+  /* Grok's mark is white-on-transparent — give it a dark chip to stay visible */
+  .nav-tech-ball.ntb-dark { background: rgba(0, 0, 0, 0.4); }
+
+  /* Two safe columns hugging the edges — the centred link pills own the
+     middle of the screen, so every badge sits in the margin, never behind text. */
+  .ntb1, .ntb3, .ntb5, .ntb7, .ntb9 { left: 7%; }
+  .ntb2, .ntb4, .ntb6, .ntb8       { right: 7%; }
+
+  .ntb1 { top: 8%;  animation: techFloatA 13s ease-in-out -2s infinite; }
+  .ntb2 { top: 14%; animation: techFloatB 15s ease-in-out -5s infinite; }
+  .ntb3 { top: 28%; animation: techFloatC 14s ease-in-out -1s infinite; }
+  .ntb4 { top: 38%; animation: techFloatA 16s ease-in-out -7s infinite; }
+  .ntb5 { top: 48%; animation: techFloatB 12s ease-in-out -3s infinite; }
+  .ntb6 { top: 62%; animation: techFloatC 15s ease-in-out -6s infinite; }
+  .ntb7 { top: 68%; animation: techFloatA 13s ease-in-out -4s infinite; }
+  .ntb8 { top: 84%; animation: techFloatB 14s ease-in-out -8s infinite; }
+  .ntb9 { top: 90%; animation: techFloatC 17s ease-in-out -9s infinite; opacity: 0.4; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-tech-ball { animation: none !important; }
   }
 
   /* Centered list, no more big white box */
@@ -3340,12 +3484,13 @@ a[aria-label="Chat WhatsApp"]:hover {
 /* ---- Project tiles ---- */
 .portfolio .portfolio-item {
   border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  /* Navy-tinted shadow (matches the brand ink, not a neutral grey) */
+  box-shadow: 0 1px 1px rgba(10, 18, 32, 0.04), 0 10px 30px -6px rgba(10, 18, 32, 0.18);
   transition: box-shadow 0.45s ease;
 }
 
 .portfolio .portfolio-item:hover {
-  box-shadow: 0 26px 55px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 2px 3px rgba(10, 18, 32, 0.05), 0 30px 60px -12px rgba(10, 18, 32, 0.32);
 }
 
 /* Uniform, clean tiles */
@@ -3380,7 +3525,8 @@ a[aria-label="Chat WhatsApp"]:hover {
   opacity: 1;
 }
 
-/* Category badge (glassmorphism, always visible) */
+/* Category badge (glassmorphism, always visible) — text-shadow guarantees
+   legibility no matter how light the underlying screenshot is */
 .portfolio .portfolio-item::after {
   position: absolute;
   top: 16px;
@@ -3390,13 +3536,14 @@ a[aria-label="Chat WhatsApp"]:hover {
   border-radius: 50px;
   font-family: var(--heading-font);
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
   color: #fff;
-  background: rgba(6, 18, 31, 0.5);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  background: rgba(6, 18, 31, 0.55);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 18px rgba(10, 18, 32, 0.3);
 }
 
 .portfolio .portfolio-item.filter-web::after { content: "Web"; }
@@ -3416,6 +3563,7 @@ a[aria-label="Chat WhatsApp"]:hover {
 
 .portfolio .portfolio-item .portfolio-info h4 {
   color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   padding-right: 60px;      /* leave room for the zoom button */
   margin-bottom: 4px;
   transform: translateY(6px);
@@ -3449,8 +3597,8 @@ a[aria-label="Chat WhatsApp"]:hover {
 .portfolio .portfolio-item .portfolio-info .preview-link {
   position: absolute;
   top: auto;
-  bottom: 20px;
-  right: 22px;
+  bottom: 18px;
+  right: 18px;
   left: auto;
   width: 50px;
   height: 50px;
