@@ -137,26 +137,31 @@
             <div class="row gy-4">
 
               <div class="col-md-6">
-                <label for="name-field">Votre nom</label>
-                <div class="field-wrap">
-                  <i class="bi bi-person field-icon"></i>
-                  <input type="text" name="name" id="name-field" class="form-control" placeholder="Ex : Awa Koné" required="">
+                <div class="pf-field">
+                  <i class="bi bi-person pf-field__icon"></i>
+                  <input type="text" name="name" id="name-field" class="pf-field__input" placeholder=" " autocomplete="name" required>
+                  <label for="name-field" class="pf-field__label">Votre nom</label>
+                  <span class="pf-field__bar"></span>
+                  <i class="bi bi-check-circle-fill pf-field__valid"></i>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <label for="email-field">Votre email</label>
-                <div class="field-wrap">
-                  <i class="bi bi-envelope field-icon"></i>
-                  <input type="email" class="form-control" name="email" id="email-field" placeholder="vous@exemple.com" required="">
+                <div class="pf-field">
+                  <i class="bi bi-envelope pf-field__icon"></i>
+                  <input type="email" name="email" id="email-field" class="pf-field__input" placeholder=" " autocomplete="email" required>
+                  <label for="email-field" class="pf-field__label">Votre email</label>
+                  <span class="pf-field__bar"></span>
+                  <i class="bi bi-check-circle-fill pf-field__valid"></i>
                 </div>
               </div>
 
               <div class="col-md-12">
-                <label for="message-field">Message</label>
-                <div class="field-wrap field-wrap--area">
-                  <i class="bi bi-chat-left-text field-icon"></i>
-                  <textarea class="form-control" name="message" rows="8" id="message-field" placeholder="Parlez-moi de votre projet…" required=""></textarea>
+                <div class="pf-field pf-field--area">
+                  <i class="bi bi-chat-left-text pf-field__icon"></i>
+                  <textarea name="message" rows="7" id="message-field" class="pf-field__input" placeholder=" " required></textarea>
+                  <label for="message-field" class="pf-field__label">Votre message</label>
+                  <span class="pf-field__bar"></span>
                 </div>
               </div>
 

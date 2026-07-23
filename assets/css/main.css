@@ -949,7 +949,10 @@ section,
   color: var(--heading-color);
 }
 
-.hero .btn-get-started {
+/* A reusable primary pill button — not hero-specific, even though it was
+   born there (also used e.g. on the home "Projets phares" CTA and the
+   portfolio page's Pinterest link). */
+.btn-get-started {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -962,11 +965,14 @@ section,
   padding: 14px 30px;
   border-radius: var(--radius-btn);
   transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
-  margin-top: 30px;
 }
 
-.hero .btn-get-started:hover {
+.btn-get-started:hover {
   background: color-mix(in srgb, var(--accent-color) 90%, white 20%);
+}
+
+.hero .btn-get-started {
+  margin-top: 30px;
 }
 
 @media (max-width: 768px) {
@@ -1416,61 +1422,8 @@ section,
   }
 }
 
-.portfolio .portfolio-item {
-  position: relative;
-  overflow: hidden;
-}
-
-.portfolio .portfolio-item .portfolio-info {
-  opacity: 0;
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: -100%;
-  z-index: 3;
-  transition: all ease-in-out 0.5s;
-  background: color-mix(in srgb, var(--surface-color), transparent 10%);
-  padding: 15px;
-}
-
-.portfolio .portfolio-item .portfolio-info h4 {
-  font-size: 18px;
-  font-weight: 600;
-  padding-right: 50px;
-}
-
-.portfolio .portfolio-item .portfolio-info p {
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
-  font-size: 14px;
-  margin-bottom: 0;
-  padding-right: 50px;
-}
-
-.portfolio .portfolio-item .portfolio-info .preview-link,
-.portfolio .portfolio-item .portfolio-info .details-link {
-  position: absolute;
-  right: 50px;
-  font-size: 24px;
-  top: calc(50% - 14px);
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
-  transition: 0.3s;
-  line-height: 0;
-}
-
-.portfolio .portfolio-item .portfolio-info .preview-link:hover,
-.portfolio .portfolio-item .portfolio-info .details-link:hover {
-  color: var(--accent-color);
-}
-
-.portfolio .portfolio-item .portfolio-info .details-link {
-  right: 14px;
-  font-size: 28px;
-}
-
-.portfolio .portfolio-item:hover .portfolio-info {
-  opacity: 1;
-  bottom: 0;
-}
+/* Portfolio card markup/design lives in the "case-file cards" section
+   further down this file (search "pf-card"). */
 
 /*--------------------------------------------------------------
 # Portfolio Details Section
@@ -1799,14 +1752,14 @@ body.scrolled .header {
   .hero .hero-cta .btn-outline { justify-content: center; width: 100%; }
 }
 
-.hero .btn-get-started {
+.btn-get-started {
   position: relative;
   overflow: hidden;
   background: var(--accent-gradient);
   box-shadow: var(--shadow-accent);
 }
 
-.hero .btn-get-started::after {
+.btn-get-started::after {
   content: "";
   position: absolute;
   top: 0;
@@ -1818,7 +1771,7 @@ body.scrolled .header {
   animation: shine 3.5s ease-in-out infinite;
 }
 
-.hero .btn-get-started:hover {
+.btn-get-started:hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 40px rgba(30, 95, 173, 0.45);
 }
@@ -2669,65 +2622,130 @@ body.scrolled .header {
   }
 }
 
-.contact form label {
-  display: block;
-  margin-bottom: 8px;
-  font-family: var(--heading-font);
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--heading-color);
-}
-
-/* Field with a leading icon that reacts to focus */
-.contact form .field-wrap {
+/*--------------------------------------------------------------
+# Contact form — floating-label fields (redesign #2)
+# The label lives inside the field at rest and rises into a small
+# caption the instant it's focused or filled — no separate static
+# label line above the box anymore. A center-out gradient underline
+# draws in on focus, and a valid, non-empty value pops a check mark.
+--------------------------------------------------------------*/
+.pf-field {
   position: relative;
 }
 
-.contact form .field-icon {
+.pf-field__icon {
   position: absolute;
-  left: 15px;
-  top: 15px;
-  font-size: 17px;
+  left: 16px;
+  top: 21px;
+  font-size: 16px;
   line-height: 1;
   color: color-mix(in srgb, var(--default-color), transparent 45%);
   pointer-events: none;
   transition: color 0.3s ease, transform 0.35s var(--ease-spring);
+  z-index: 2;
+}
+.pf-field--area .pf-field__icon {
+  top: 18px;
+}
+.pf-field:focus-within .pf-field__icon {
+  color: var(--accent-color);
+  transform: scale(1.1);
 }
 
-.contact form .form-control {
+.pf-field__input {
+  width: 100%;
   font-size: 15px;
-  padding: 13px 16px 13px 44px;   /* room for the icon */
+  font-family: var(--default-font);
+  color: var(--heading-color);
+  padding: 25px 16px 9px 44px;
   border-radius: 12px;
   border: 1px solid color-mix(in srgb, var(--default-color), transparent 80%);
   background-color: color-mix(in srgb, var(--default-color), transparent 97%);
   transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
-
-.contact form textarea.form-control {
+textarea.pf-field__input {
   min-height: 172px;
   line-height: 1.6;
+  padding-top: 30px;
   resize: vertical;
   cursor: text;
 }
-/* The icon marks the first line; wrapped lines return to a comfortable indent */
-.contact form .field-wrap--area .form-control {
-  padding-top: 14px;
-}
 
-.contact form .field-wrap--area .field-icon {
-  top: 16px;
-}
-
-.contact form .form-control:focus {
+.pf-field__input:focus {
+  outline: none;
   border-color: var(--accent-color);
   background-color: var(--surface-color);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color), transparent 82%);
 }
 
-/* Icon lights up cobalt and nudges when its field is focused */
-.contact form .field-wrap:focus-within .field-icon {
+/* The floating label: resting at the input's own text baseline, it rises
+   into a small caption above once the field is focused or has a value.
+   `:not(:placeholder-shown)` is what detects "has a value" — every field
+   carries placeholder=" " (a lone space) specifically to make that work. */
+.pf-field__label {
+  position: absolute;
+  left: 44px;
+  top: 17px;
+  font-size: 15px;
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  transform-origin: left top;
+  transition: top 0.25s var(--ease-out), font-size 0.25s var(--ease-out),
+              color 0.25s ease, font-weight 0.25s ease;
+  pointer-events: none;
+}
+.pf-field--area .pf-field__label {
+  top: 19px;
+}
+
+.pf-field__input:focus + .pf-field__label,
+.pf-field__input:not(:placeholder-shown) + .pf-field__label {
+  top: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
   color: var(--accent-color);
-  transform: scale(1.12);
+}
+
+/* Gradient underline that draws in from the center on focus */
+.pf-field__bar {
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent-gradient);
+  transition: left 0.35s var(--ease-out), right 0.35s var(--ease-out);
+  pointer-events: none;
+}
+.pf-field__input:focus ~ .pf-field__bar {
+  left: 3px;
+  right: 3px;
+}
+
+/* A quiet checkmark pops in once the value actually validates (email
+   pattern, required-not-empty…) — meaningful feedback, not decoration */
+.pf-field__valid {
+  position: absolute;
+  right: 14px;
+  top: 21px;
+  font-size: 16px;
+  color: #1a9d5a;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.3s ease, transform 0.35s var(--ease-spring);
+  pointer-events: none;
+}
+.pf-field__input:not(:placeholder-shown):valid ~ .pf-field__valid {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-field__label,
+  .pf-field__bar,
+  .pf-field__valid,
+  .pf-field__icon { transition: none; }
 }
 
 /* Reassurance line under the submit button */
@@ -2822,16 +2840,17 @@ body.scrolled .header {
   to { opacity: 1; transform: none; }
 }
 
-/* The whole field lifts a touch when focused, and its label lights up */
-.contact form .field-wrap {
+/* The whole field lifts a touch when focused (the label's own colour
+   change is handled directly by .pf-field__label's :focus-within rule) */
+.pf-field {
   border-radius: 12px;
   transition: transform 0.3s var(--ease-out);
 }
-.contact form .field-wrap:focus-within {
+.pf-field:focus-within {
   transform: translateY(-2px);
 }
-.contact form .row > [class*="col-"]:has(.field-wrap:focus-within) label {
-  color: var(--accent-color);
+@media (prefers-reduced-motion: reduce) {
+  .pf-field { transition: none; }
 }
 
 /* Quick actions get a shine sweep on hover */
@@ -3481,180 +3500,9 @@ a[aria-label="Chat WhatsApp"]:hover {
   color: #fff;
 }
 
-/* ---- Project tiles ---- */
-.portfolio .portfolio-item {
-  border-radius: 18px;
-  /* Navy-tinted shadow (matches the brand ink, not a neutral grey) */
-  box-shadow: 0 1px 1px rgba(10, 18, 32, 0.04), 0 10px 30px -6px rgba(10, 18, 32, 0.18);
-  transition: box-shadow 0.45s ease;
-}
+/* ---- Project tiles: see the "pf-card" case-file system further down ---- */
 
-.portfolio .portfolio-item:hover {
-  box-shadow: 0 2px 3px rgba(10, 18, 32, 0.05), 0 30px 60px -12px rgba(10, 18, 32, 0.32);
-}
-
-/* Uniform, clean tiles */
-.portfolio .portfolio-item img {
-  width: 100%;
-  height: 260px;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.portfolio .portfolio-item:hover img {
-  transform: scale(1.1);
-}
-
-/* Gradient overlay: a subtle base so the title is always legible,
-   deepening on hover to reveal the description. */
-.portfolio .portfolio-item::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: linear-gradient(to top,
-    rgba(6, 18, 31, 0.92) 0%,
-    rgba(6, 18, 31, 0.4) 45%,
-    transparent 72%);
-  opacity: 0.72;
-  transition: opacity 0.5s ease;
-}
-
-.portfolio .portfolio-item:hover::before {
-  opacity: 1;
-}
-
-/* Category badge (glassmorphism, always visible) — text-shadow guarantees
-   legibility no matter how light the underlying screenshot is */
-.portfolio .portfolio-item::after {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 4;
-  padding: 6px 14px;
-  border-radius: 50px;
-  font-family: var(--heading-font);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  background: rgba(6, 18, 31, 0.55);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 6px 18px rgba(10, 18, 32, 0.3);
-}
-
-.portfolio .portfolio-item.filter-web::after { content: "Web"; }
-.portfolio .portfolio-item.filter-mobile::after { content: "Mobile"; }
-.portfolio .portfolio-item.filter-design::after { content: "Infographie"; }
-
-/* Info panel: title always visible; description reveals on hover */
-.portfolio .portfolio-item .portfolio-info {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 22px 24px;
-  background: transparent;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.portfolio .portfolio-item .portfolio-info h4 {
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  padding-right: 60px;      /* leave room for the zoom button */
-  margin-bottom: 4px;
-  transform: translateY(6px);
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.portfolio .portfolio-item:hover .portfolio-info h4 {
-  transform: translateY(0);
-}
-
-/* Description is hidden until hover, then eases open */
-.portfolio .portfolio-item .portfolio-info p {
-  color: rgba(255, 255, 255, 0.85);
-  padding-right: 60px;
-  font-size: 13.5px;
-  margin-bottom: 0;
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transform: translateY(8px);
-  transition: max-height 0.5s ease, opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.portfolio .portfolio-item:hover .portfolio-info p {
-  max-height: 90px;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Circular glass "zoom" button, top-right, pops in on hover */
-.portfolio .portfolio-item .portfolio-info .preview-link {
-  position: absolute;
-  top: auto;
-  bottom: 18px;
-  right: 18px;
-  left: auto;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  opacity: 0;
-  transform: scale(0.4);
-  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, background 0.3s ease;
-}
-
-.portfolio .portfolio-item:hover .portfolio-info .preview-link {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.portfolio .portfolio-item .portfolio-info .preview-link:hover {
-  background: var(--accent-gradient);
-  color: #fff;
-  border-color: transparent;
-}
-
-@media (max-width: 575px) {
-  .portfolio .portfolio-item img {
-    height: 220px;
-  }
-}
-
-/* Keep project text clear of the zoom button */
-.portfolio .portfolio-item .portfolio-info {
-  padding-right: 84px;
-}
-
-/* On touch devices there is no hover, so reveal anything that would otherwise
-   be hidden behind :hover. Targets real touch inputs at any width. */
 @media (hover: none) {
-  /* Projects: show category, title, description and the zoom button by default */
-  .portfolio .portfolio-item::before { opacity: 1; }
-  .portfolio .portfolio-item .portfolio-info h4 { transform: none; }
-  .portfolio .portfolio-item .portfolio-info p {
-    max-height: 90px;
-    opacity: 1;
-    transform: none;
-  }
-  .portfolio .portfolio-item .portfolio-info .preview-link {
-    opacity: 1;
-    transform: scale(1);
-  }
-  .portfolio .portfolio-item:hover img { transform: none; }
-
   /* Services: the "En savoir plus" link is hover-revealed → show it on touch */
   .services .service-item .learn-more {
     opacity: 1;
@@ -3662,19 +3510,7 @@ a[aria-label="Chat WhatsApp"]:hover {
   }
 }
 
-/* Narrow-width fallback in case hover media isn't honoured */
 @media (max-width: 768px) {
-  .portfolio .portfolio-item::before { opacity: 1; }
-  .portfolio .portfolio-item .portfolio-info h4 { transform: none; }
-  .portfolio .portfolio-item .portfolio-info p {
-    max-height: 90px;
-    opacity: 1;
-    transform: none;
-  }
-  .portfolio .portfolio-item .portfolio-info .preview-link {
-    opacity: 1;
-    transform: scale(1);
-  }
   .services .service-item .learn-more {
     opacity: 1;
     transform: none;
@@ -3687,9 +3523,10 @@ a[aria-label="Chat WhatsApp"]:hover {
 
 /* Scale on press: subtle tactile feedback on every primary action.
    0.96 is the sweet spot — anything lower feels exaggerated. */
-.hero .btn-get-started:active,
+.btn-get-started:active,
 .hero .btn-outline:active,
 .btn-cta:active,
+.pf-feature:active,
 .services .learn-more:active,
 .php-email-form button[type="submit"]:active,
 .skill-card:active {
@@ -3720,7 +3557,7 @@ p,
 /* Subtle 1px outline gives content images consistent edge depth.
    Pure black in light, pure white in dark — never a tinted neutral. */
 .about .col-lg-4 img,
-.portfolio .portfolio-item img,
+.portfolio .pf-card__media img,
 .resume .resume-item img {
   outline: 1px solid rgba(0, 0, 0, 0.1);
   outline-offset: -1px;
@@ -3728,7 +3565,7 @@ p,
 
 @media (prefers-color-scheme: dark) {
   .about .col-lg-4 img,
-  .portfolio .portfolio-item img,
+  .portfolio .pf-card__media img,
   .resume .resume-item img {
     outline-color: rgba(255, 255, 255, 0.1);
   }
@@ -4388,89 +4225,332 @@ p,
   .services-page .svc-illus__sweep { animation: none; }
 }
 
-/*--------------------------------------------------------------
-# Projects — personalised image box + branded "cover" tiles
---------------------------------------------------------------*/
-
-/* A refined frame: cobalt ring that lights up on hover, plus a corner index */
-.portfolio .portfolio-item {
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
-  transition: box-shadow 0.45s ease, transform 0.45s var(--ease-out), border-color 0.45s ease;
-}
-.portfolio .portfolio-item:hover {
-  transform: translateY(-6px);
-  border-color: color-mix(in srgb, var(--accent-color), transparent 55%);
-}
-
-/* Branded cover tile for projects that have no screenshot (yet) */
-.portfolio .portfolio-item .portfolio-cover {
-  position: relative;
-  height: 260px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: radial-gradient(130% 140% at 18% 0%, #2c7be0 0%, #1e5fad 50%, #123869 100%);
-}
-@media (max-width: 575px) {
-  .portfolio .portfolio-item .portfolio-cover { height: 220px; }
-}
-.portfolio .portfolio-cover__grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.10) 1px, transparent 1px);
-  background-size: 30px 30px;
-  -webkit-mask-image: radial-gradient(120% 120% at 50% 30%, #000 45%, transparent 82%);
-          mask-image: radial-gradient(120% 120% at 50% 30%, #000 45%, transparent 82%);
-  animation: svcGridPan 22s linear infinite;
-}
-/* Bespoke SVG scene depicting the project */
-.portfolio .portfolio-cover__art {
-  position: relative;
-  z-index: 2;
-  width: 80%;
-  max-width: 262px;
-  height: auto;
-  margin-top: -8px;              /* lift clear of the title area below */
-  filter: drop-shadow(0 20px 34px rgba(6, 16, 32, 0.42));
-  transition: transform 0.55s var(--ease-spring);
-}
-.portfolio .portfolio-item:hover .portfolio-cover__art {
-  transform: translateY(-6px) scale(1.03);
-}
-/* Subtle life inside the scene */
-.portfolio .portfolio-cover__art .art-pulse {
-  transform-origin: center;
-  animation: artPulse 3.2s ease-in-out infinite;
-}
+/* Shared pulse keyframe — used by the little "alive" details inside every
+   bespoke SVG scene, both here and on the Services page illustrations. */
 @keyframes artPulse {
   0%, 100% { opacity: 0.55; }
   50% { opacity: 1; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .portfolio .portfolio-cover__art .art-pulse { animation: none; }
+
+/*--------------------------------------------------------------
+# Projects — case-file cards (redesign #2)
+# A horizontal split card (media | body) with the description always
+# visible — no more hover-to-reveal. Each category carries its own
+# accent (cobalt/Web, violet/Mobile, teal/Infographie) through three
+# custom properties, so one ruleset serves all three palettes.
+--------------------------------------------------------------*/
+.portfolio-item.filter-web,    .pf-feature-item.filter-web    { --pf-accent: #1e5fad; --pf-accent-2: #2c7be0; }
+.portfolio-item.filter-mobile, .pf-feature-item.filter-mobile { --pf-accent: #6d4fe0; --pf-accent-2: #8a6ff0; }
+.portfolio-item.filter-design, .pf-feature-item.filter-design { --pf-accent: #0e9d8c; --pf-accent-2: #14b8a6; }
+
+.pf-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface-color);
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 91%);
+  box-shadow: 0 1px 1px rgba(10, 18, 32, 0.04), 0 10px 30px -8px rgba(10, 18, 32, 0.16);
+  overflow: hidden;
+  transition: transform 0.45s var(--ease-out), box-shadow 0.45s ease, border-color 0.45s ease;
 }
-/* Floating amber orb echoing the bulb */
-.portfolio .portfolio-cover::after {
+@media (min-width: 576px) {
+  .pf-card { flex-direction: row; }
+}
+.pf-card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--pf-accent), transparent 55%);
+  box-shadow: 0 2px 3px rgba(10, 18, 32, 0.05),
+              0 26px 55px -16px color-mix(in srgb, var(--pf-accent), transparent 35%);
+}
+
+/* Colored spine — the one signature element, always on the left edge
+   whether the card is stacked (mobile) or split (desktop) */
+.pf-card::before {
   content: "";
   position: absolute;
-  top: 34px;
-  right: 40px;
-  z-index: 2;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--glow-color);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--glow-color), transparent 80%);
-  animation: svcDotFloat 4.5s ease-in-out infinite;
+  inset: 0 auto 0 0;
+  width: 4px;
+  z-index: 3;
+  background: linear-gradient(180deg, var(--pf-accent), var(--pf-accent-2));
 }
-/* Cover tiles keep the navy overlay only faint (the gradient already carries it) */
-.portfolio .portfolio-item.is-cover::before {
-  background: linear-gradient(to top, rgba(6, 18, 31, 0.85) 0%, rgba(6, 18, 31, 0.15) 48%, transparent 72%);
+
+.pf-card__media {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 220px;   /* stacked mobile: explicit, since the img below is out of flow */
+  overflow: hidden;
+}
+@media (min-width: 576px) {
+  .pf-card__media {
+    width: 42%;
+    flex-basis: 42%;
+    height: auto;      /* row mode: stretches to match .pf-card__body's own height */
+    min-height: 200px; /* floor, in case the description is a single short line */
+  }
+}
+/* Absolutely positioned (out of normal flow) so a source image's native
+   aspect ratio — some are wide banners, some are tall portrait kakemonos —
+   never dictates the row's height. Without this, flexbox's hypothetical
+   sizing pass reads the (still in-flow) image's intrinsic ratio *before*
+   stretch is applied, so one tall photo would inflate the whole card and
+   leave the neighbouring short description stranded in empty space. */
+.pf-card__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.pf-card:hover .pf-card__media img {
+  transform: scale(1.08);
+}
+
+/* Zoom-to-lightbox control — small, explicit, always reachable (no more
+   hover-only affordance that touch devices could never see) */
+.pf-card__zoom {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 4;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  background: rgba(10, 18, 32, 0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-spring), background 0.3s ease;
+}
+.pf-card:hover .pf-card__zoom {
+  opacity: 1;
+  transform: scale(1);
+}
+.pf-card__zoom:hover {
+  background: var(--pf-accent);
+  border-color: transparent;
+}
+@media (hover: none) {
+  .pf-card__zoom { opacity: 1; transform: scale(1); }
+}
+
+.pf-card__body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pf-card__cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  font-family: var(--heading-font);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--pf-accent);
+  background: color-mix(in srgb, var(--pf-accent), transparent 90%);
+  padding: 5px 12px;
+  border-radius: 50px;
+}
+.pf-card__cat i {
+  font-size: 12px;
+}
+
+.pf-card__body h4 {
+  margin: 2px 0 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+.pf-card__body p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--default-color), transparent 15%);
+  flex: 1;
+}
+
+/* Cover (SVG scene) tiles reuse the same media slot */
+.pf-card__cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(130% 140% at 20% 0%, var(--pf-accent-2) 0%, var(--pf-accent) 55%, color-mix(in srgb, var(--pf-accent), #000 32%) 100%);
+}
+.pf-card__cover-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(120% 120% at 50% 40%, #000 45%, transparent 82%);
+          mask-image: radial-gradient(120% 120% at 50% 40%, #000 45%, transparent 82%);
+  animation: svcGridPan 22s linear infinite;
+}
+.pf-card__art {
+  position: relative;
+  z-index: 2;
+  width: 78%;
+  max-width: 220px;
+  height: auto;
+  filter: drop-shadow(0 16px 28px rgba(6, 16, 32, 0.4));
+  transition: transform 0.55s var(--ease-spring);
+}
+.pf-card:hover .pf-card__art {
+  transform: translateY(-5px) scale(1.04);
+}
+.pf-card__art .art-pulse {
+  transform-origin: center;
+  animation: artPulse 3.2s ease-in-out infinite;
+}
+
+/* Filter pills pick up the matching category gradient once selected */
+.portfolio-filters li[data-filter=".filter-web"].filter-active {
+  background: linear-gradient(135deg, #2c7be0, #1e5fad);
+  box-shadow: 0 10px 24px rgba(30, 95, 173, 0.32);
+}
+.portfolio-filters li[data-filter=".filter-mobile"].filter-active {
+  background: linear-gradient(135deg, #8a6ff0, #6d4fe0);
+  box-shadow: 0 10px 24px rgba(109, 79, 224, 0.32);
+}
+.portfolio-filters li[data-filter=".filter-design"].filter-active {
+  background: linear-gradient(135deg, #14b8a6, #0e9d8c);
+  box-shadow: 0 10px 24px rgba(14, 157, 140, 0.32);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .portfolio .portfolio-cover__grid,
-  .portfolio .portfolio-cover::after { animation: none; }
+  .pf-card__cover-grid,
+  .pf-card__art .art-pulse { animation: none; }
+}
+
+/*--------------------------------------------------------------
+# Home — "Projets phares" feature cards
+# A vertical sibling of the pf-card system (image on top, full width):
+# more spacious for a 3-up showcase than the dense case-file layout,
+# but sharing the same per-category accent variables.
+--------------------------------------------------------------*/
+.pf-feature {
+  display: block;
+  position: relative;
+  height: 100%;
+  background: var(--surface-color);
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 91%);
+  box-shadow: 0 1px 1px rgba(10, 18, 32, 0.04), 0 10px 30px -8px rgba(10, 18, 32, 0.16);
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.45s var(--ease-out), box-shadow 0.45s ease, border-color 0.45s ease;
+}
+.pf-feature:hover {
+  transform: translateY(-8px);
+  border-color: color-mix(in srgb, var(--pf-accent), transparent 55%);
+  box-shadow: 0 2px 3px rgba(10, 18, 32, 0.05),
+              0 30px 60px -16px color-mix(in srgb, var(--pf-accent), transparent 35%);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Top spine — the same signature, rotated to run along the top edge */
+.pf-feature::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  z-index: 3;
+  background: linear-gradient(90deg, var(--pf-accent), var(--pf-accent-2));
+}
+
+.pf-feature__media {
+  position: relative;
+  height: 230px;
+  overflow: hidden;
+}
+.pf-feature__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.pf-feature:hover .pf-feature__media img {
+  transform: scale(1.08);
+}
+/* Dark wash at the base so the category chip stays legible over any photo */
+.pf-feature__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 18, 31, 0.6), transparent 55%);
+}
+
+.pf-feature__cat {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--heading-font);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  background: color-mix(in srgb, var(--pf-accent), transparent 12%);
+  padding: 5px 12px;
+  border-radius: 50px;
+}
+
+.pf-feature__body {
+  padding: 22px 24px 24px;
+}
+.pf-feature__body h3 {
+  margin: 0 0 8px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+.pf-feature__body p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--default-color), transparent 15%);
+}
+.pf-feature__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--pf-accent);
+}
+.pf-feature__link i {
+  font-size: 13px;
+  transition: transform 0.3s ease;
+}
+.pf-feature:hover .pf-feature__link i {
+  transform: translateX(4px);
 }
