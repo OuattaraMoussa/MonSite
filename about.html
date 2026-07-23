@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Apropos de moi</title>
+  <title>À propos de moi</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -48,8 +48,8 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="index.html">Acceuil</a></li>
-          <li><a href="about.html" class="active">Apropos</a></li>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="about.html" class="active">À propos</a></li>
           <li><a href="resume.html">Cv</a></li>
           <li><a href="services.html">Services</a></li>
           <li><a href="portfolio.html">Projets</a></li>
@@ -105,7 +105,7 @@
             <ul>
               <li><i class="bi bi-person"></i> <strong>Âge :</strong> <span>23 ans</span></li>
               <li><i class="bi bi-mortarboard"></i> <strong>Diplôme :</strong> <span>Licence Pro. Génie Logiciel</span></li>
-              <li><i class="bi bi-envelope"></i> <strong>Email :</strong> <span>ouattware@gmail.com</span></li>
+              <li><i class="bi bi-envelope"></i> <strong>Email :</strong> <span class="js-email"></span></li>
               <li><i class="bi bi-briefcase"></i> <strong>Freelance :</strong> <span>Disponible</span></li>
             </ul>
           </div>
@@ -403,6 +403,17 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Email masqué : reconstruit côté client pour éviter le scraping -->
+  <script>
+    (function () {
+      var e = atob('b3VhdHR3YXJlQGdtYWlsLmNvbQ==');
+      document.querySelectorAll('.js-email').forEach(function (el) {
+        el.textContent = e;
+        if (el.tagName === 'A') el.setAttribute('href', 'mailto:' + e);
+      });
+    })();
+  </script>
 
 </body>
 

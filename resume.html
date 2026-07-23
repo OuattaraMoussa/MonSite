@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
@@ -48,8 +48,8 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="index.html">Acceuil</a></li>
-          <li><a href="about.html">Apropos</a></li>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="about.html">À propos</a></li>
           <li><a href="resume.html" class="active">Cv</a></li>
           <li><a href="services.html">Services</a></li>
           <li><a href="portfolio.html">Projets</a></li>
@@ -116,7 +116,7 @@
             <ul>
               <li>Abobo, Abidjan – Côte d'Ivoire</li>
               <li>07 57 90 23 56</li>
-              <li>ouattware@gmail.com</li>
+              <li><span class="js-email"></span></li>
               <li>https://ouattwareinformatique.free.nf</li>
             </ul>
           </div><!-- End Resume Item -->
@@ -312,6 +312,17 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Email masqué : reconstruit côté client pour éviter le scraping -->
+  <script>
+    (function () {
+      var e = atob('b3VhdHR3YXJlQGdtYWlsLmNvbQ==');
+      document.querySelectorAll('.js-email').forEach(function (el) {
+        el.textContent = e;
+        if (el.tagName === 'A') el.setAttribute('href', 'mailto:' + e);
+      });
+    })();
+  </script>
 
 </body>
 

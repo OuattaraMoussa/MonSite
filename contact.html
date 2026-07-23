@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
@@ -48,8 +48,8 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="index.html">Acceuil</a></li>
-          <li><a href="about.html">Apropos</a></li>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="about.html">À propos</a></li>
           <li><a href="resume.html">Cv</a></li>
           <li><a href="services.html">Services</a></li>
           <li><a href="portfolio.html">Projets</a></li>
@@ -110,13 +110,13 @@
               <i class="bi bi-envelope flex-shrink-0"></i>
               <div>
                 <h3>Email</h3>
-                <p><a href="mailto:ouattware@gmail.com">ouattware@gmail.com</a></p>
+                <p><a class="js-email-text" href="#">m'écrire un email</a></p>
               </div>
             </div><!-- End Info Item -->
 
             <div class="quick-actions" data-aos="fade-up" data-aos-delay="450">
               <a class="qa-wa" href="https://wa.me/2250757902356?text=Bonjour%20Moussa%2C%20je%20vous%20contacte%20depuis%20votre%20site%20Ouattware%20%3A%20j%27aimerais%20discuter%20d%27un%20projet." target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> Discuter sur WhatsApp</a>
-              <a class="qa-mail" href="mailto:ouattware@gmail.com"><i class="bi bi-envelope-fill"></i> Email direct</a>
+              <a class="qa-mail js-email-link" href="#"><i class="bi bi-envelope-fill"></i> Email direct</a>
             </div>
 
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.7948309398016!2d-4.085265226356838!3d5.448088234728202!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1bf00122dd053%3A0xf42fc79df9cd7820!2sn&#39;dotr%C3%A9%20kobakro!5e0!3m2!1sfr!2sci!4v1754827009549!5m2!1sfr!2sci" frameborder="0" style="border:0; width: 100%; height: 270px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -124,7 +124,16 @@
         </div>
 
         <div class="col-lg-7">
-          <form action="contact.php" method="post"  data-aos="fade-up" data-aos-delay="200">
+          <form id="contact-form" method="POST" data-aos="fade-up" data-aos-delay="200">
+
+            <!-- FormSubmit : réglages -->
+            <input type="hidden" name="_subject" value="Nouveau message depuis le site Ouattware">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="true">
+            <input type="hidden" name="_next" value="https://ouattwareinformatique.onrender.com/merci.html">
+            <!-- Honeypot anti-spam (doit rester vide) -->
+            <input type="text" name="_honey" style="display:none">
+
             <div class="row gy-4">
 
               <div class="col-md-6">
@@ -231,6 +240,22 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Email masqué : reconstruit côté client pour éviter le scraping -->
+  <script>
+    (function () {
+      var e = atob('b3VhdHR3YXJlQGdtYWlsLmNvbQ==');
+      var form = document.getElementById('contact-form');
+      if (form) form.setAttribute('action', 'https://formsubmit.co/' + e);
+      document.querySelectorAll('.js-email-link').forEach(function (a) {
+        a.setAttribute('href', 'mailto:' + e);
+      });
+      document.querySelectorAll('.js-email-text').forEach(function (a) {
+        a.setAttribute('href', 'mailto:' + e);
+        a.textContent = e;
+      });
+    })();
+  </script>
 
 </body>
 
